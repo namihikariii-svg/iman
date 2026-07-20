@@ -1,0 +1,974 @@
+/* ==========================================================================
+   1. BALANCED RESORT-AESTHETIC COLOR SYSTEM
+   ========================================================================== */
+:root {
+    --bg-main-canvas: #C7B7A3;    /* The comfortable beige color as your page foundation */
+    --bg-card-solid: #561C24;     /* Rich, luxury solid burgundy for structural containers */
+    --color-cream-light: #E8D8C4;  /* Soft cream for clear contrast accents */
+    --text-dark: #2B0E12;         /* Dark cocoa-burgundy for main text readability */
+    --text-light: #FFFFFF;        /* Crisp white for headings inside dark sections */
+    
+    /* Elegant, frosty white glassmorphism for floating UI elements */
+    --glass-bg: rgba(255, 255, 255, 0.35); 
+    --glass-border: rgba(255, 255, 255, 0.5);
+    --glass-shadow: rgba(43, 14, 18, 0.12);
+}
+
+/* ==========================================================================
+   2. BASE STYLES & BULLETPROOF LOCAL TYPOGRAPHY FORCE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body, p, a, button, input, textarea, li {
+    font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3 {
+    font-family: "Fraunces", Georgia, serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+    background-color: var(--bg-main-canvas);
+    color: var(--text-dark) !important;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Subtle background texture: soft color wash + fine grain, both sit
+   behind all page content and never compete with it for attention */
+body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    pointer-events: none;
+    background:
+        radial-gradient(650px circle at 12% 18%, rgba(140, 48, 60, 0.14), transparent 60%),
+        radial-gradient(750px circle at 88% 82%, rgba(86, 28, 36, 0.12), transparent 60%);
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+}
+
+/* ==========================================================================
+   3. THE MAIN PAGE WRAPPER (Fixes Spacing & Width)
+   ========================================================================== */
+.container {
+    max-width: 1400px; /* Expanded from 1100px so it stretches out elegantly */
+    margin: 0 auto;
+    padding: 172px 40px 60px 40px; /* Just enough room for navbar + logo, nothing extra */
+}
+
+/* ==========================================================================
+   4. FIXED FLOATING NAV BAR (Detached Capsule Style)
+   ========================================================================== */
+.navbar {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 80px);
+    max-width: 1320px; /* Expanded from 900px so your nav elements sit beautifully at the top edges */
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+    background: transparent !important; 
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    z-index: 1000;
+}
+
+/* Center Text Capsule Component */
+.nav-links {
+    display: flex;
+    gap: 4px;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+    padding: 6px 12px;
+    border-radius: 30px;
+    box-shadow: 0 8px 32px 0 var(--glass-shadow) !important;
+    margin-left: auto; 
+    margin-right: 24px; 
+}
+
+.nav-item {
+    color: var(--text-dark) !important;
+    text-decoration: none;
+    padding: 8px 24px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: 20px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.nav-item:hover, .nav-item.active {
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--text-dark) !important;
+}
+
+/* Circular Icon Buttons (Home and @) */
+.nav-icon-btn {
+    color: var(--text-dark) !important;
+    font-size: 1.1rem;
+    width: 52px; 
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border) !important;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    box-shadow: 0 8px 32px 0 var(--glass-shadow) !important;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.nav-icon-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* ==========================================================================
+   4b. SPLASH PRELOADER (plays once on page load, before content is shown)
+   ========================================================================== */
+body.is-loading {
+    overflow: hidden;
+    height: 100vh;
+}
+
+#preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 3000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-main-canvas);
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+}
+
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.preloader-logo {
+    height: 220px;
+    max-height: 30vh;
+    width: auto;
+    opacity: 0;
+    transform: scale(0.85);
+    animation: preloaderReveal 1.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes preloaderReveal {
+    0% {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+    55% {
+        opacity: 1;
+        transform: scale(1.03);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* ==========================================================================
+   4c. BRAND LOGO DESIGN & SCROLL CONTROLS
+   ========================================================================== */
+.brand-logo {
+    position: fixed;
+    top: 36px;                 /* Aligns vertically with the navbar buttons */
+    left: 50%;
+    z-index: 900;              /* Sits BEHIND the navbar (z-index: 1000) */
+    transform: translate(-50%, 0);
+    transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.brand-logo.revealed {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.brand-logo img {
+    display: block;
+    height: 60px;              /* Adjusted height to fit nicely in the header gap */
+    width: auto;
+}
+
+/* When the user scrolls, cleanly fade out and slide up under the header bar */
+body.scrolled .brand-logo {
+    opacity: 0 !important;
+    transform: translate(-50%, -20px);
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* Social links dropdown, opened from the @ nav button */
+.social-menu-wrapper {
+    position: relative;
+}
+
+.social-toggle-btn {
+    font: inherit;
+    cursor: pointer;
+}
+
+.social-dropdown {
+    position: absolute;
+    top: calc(100% + 14px);
+    right: 0;
+    min-width: 190px;
+    padding: 8px;
+    background: var(--glass-bg) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid var(--glass-border) !important;
+    border-radius: 0;
+    box-shadow: 0 8px 32px 0 var(--glass-shadow) !important;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+    z-index: 1100;
+}
+
+.social-dropdown.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.social-dropdown-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    color: var(--text-dark) !important;
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.social-dropdown-item i {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+.social-dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* ==========================================================================
+   5. BUTTON COMPONENT STYLING
+   ========================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 30px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: var(--color-cream-light) !important;
+    color: var(--bg-card-solid) !important;
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(232, 218, 196, 0.2);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--color-cream-light) !important;
+    border: 1px solid var(--color-cream-light) !important;
+}
+
+.btn-secondary:hover {
+    background: rgba(232, 218, 196, 0.1) !important;
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   6. GLOBAL CONTENT CONFIGURATIONS
+   ========================================================================== */
+section {
+    margin-bottom: 100px;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--bg-card-solid) !important; /* Elegant burgundy headings over beige canvas */
+    margin-bottom: 32px;
+}
+
+.section-title span {
+    color: #8C303C;
+}
+
+/* ==========================================================================
+   7. HERO HERO BANNER MAIN SCREEN
+   ========================================================================== */
+.hero-section {
+    padding-top: 10px;
+}
+
+/* Solid card treatment, used on the hero, about, project, and contact cards */
+.mirror-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-card-solid);
+    box-shadow: 0 20px 50px rgba(43, 14, 18, 0.18);
+}
+
+.hero-card.mirror-card {
+    padding: 20px;
+    border-radius: 0;
+}
+
+.hero-image-banner {
+    position: relative;
+    width: 100%;
+    /* Sets the height automatically relative to width to maintain a perfect 1200x460 ratio */
+    aspect-ratio: 1200 / 460; 
+    border-radius: 0;
+    overflow: hidden;
+    background-color: var(--color-cream-light);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.hero-image-banner::after {
+    display: none; /* Removes old overlay mask so your custom design displays perfectly */
+}
+
+.hero-name-overlay {
+    position: absolute;
+    bottom: 28px;
+    right: 36px;
+    z-index: 2;
+    font-size: 3.2rem;
+    font-weight: 500;
+    font-style: italic;
+    letter-spacing: 1px;
+    line-height: 1.05;
+    color: var(--text-light) !important;
+    text-shadow: 0 4px 20px rgba(0, 0, 0, 0.45);
+}
+
+.hero-body {
+    position: relative;
+    z-index: 1;
+    padding: 32px 24px 20px 24px;
+}
+
+.hero-eyebrow {
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #C68A93 !important;
+    margin-bottom: 14px;
+}
+
+.hero-subtitle {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--color-cream-light) !important;
+    margin-bottom: 16px;
+}
+
+.hero-description {
+    font-size: 1.02rem;
+    line-height: 1.7;
+    color: rgba(255, 255, 255, 0.85) !important;
+    margin-bottom: 28px;
+    max-width: 700px;
+}
+
+.hero-cta {
+    display: flex;
+    gap: 16px;
+}
+
+/* ==========================================================================
+   8. ABOUT ME INTERACTIVE TAB CONTROLS
+   ========================================================================== */
+.about-card {
+    padding: 50px;
+    border-radius: 0;
+}
+
+/* Fix text items to light values inside dark about card container */
+.about-card .section-title {
+    color: var(--text-light) !important;
+}
+
+.tabs-nav {
+    display: flex;
+    gap: 12px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+}
+
+.tab-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.tab-btn:hover {
+    color: var(--color-cream-light);
+}
+
+.tab-btn.active {
+    color: var(--color-cream-light);
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -18px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background-color: var(--color-cream-light);
+    border-radius: 2px;
+}
+
+.tab-viewport {
+    position: relative;
+    min-height: 260px;
+}
+
+.tab-panel {
+    display: none;
+    animation: fadeIn 0.45s ease forwards;
+}
+
+.tab-panel.active {
+    display: block;
+}
+
+.panel-item {
+    background: rgba(0, 0, 0, 0.15);
+    padding: 24px;
+    border-radius: 0;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    margin-bottom: 16px;
+    transition: transform 0.3s ease;
+}
+
+.panel-item:hover {
+    transform: translateX(4px);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+.panel-item h3 {
+    color: var(--color-cream-light) !important;
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.panel-item p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.98rem;
+    line-height: 1.6;
+}
+
+.meta-info {
+    font-size: 0.85rem !important;
+    color: var(--color-cream-light) !important;
+    opacity: 0.7;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+/* --- Skill proficiency bars --- */
+.skill-bars {
+    margin-top: 8px;
+    padding: 24px;
+    background: rgba(0, 0, 0, 0.15);
+    border-radius: 0;
+}
+
+.skill-bar-item {
+    margin-bottom: 18px;
+}
+
+.skill-bar-item:last-child {
+    margin-bottom: 0;
+}
+
+.skill-bar-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.skill-bar-label span {
+    font-size: 0.92rem;
+    font-weight: 600;
+    color: var(--color-cream-light) !important;
+}
+
+.skill-bar-percent {
+    font-size: 0.85rem !important;
+    font-weight: 600;
+    opacity: 0.7;
+}
+
+.skill-bar-track {
+    width: 100%;
+    height: 8px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.12);
+    overflow: hidden;
+}
+
+.skill-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 6px;
+    background: linear-gradient(90deg, #8C303C, var(--color-cream-light));
+    transition: width 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .skill-bar-fill {
+        transition: none;
+    }
+}
+
+/* --- Soft skill / interpersonal tags --- */
+.tag-group {
+    margin-top: 24px;
+}
+
+.tag-group-label {
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-cream-light) !important;
+    opacity: 0.6;
+    margin-bottom: 10px;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tag {
+    padding: 7px 16px;
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--color-cream-light) !important;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 20px;
+}
+
+/* --- Journey timeline --- */
+.timeline {
+    position: relative;
+    padding-left: 32px;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 6px;
+    bottom: 6px;
+    width: 2px;
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.timeline-item {
+    position: relative;
+    padding-bottom: 32px;
+}
+
+.timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.timeline-dot {
+    position: absolute;
+    left: -32px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-cream-light);
+    box-shadow: 0 0 0 4px rgba(232, 216, 196, 0.15);
+}
+
+.timeline-date {
+    font-size: 0.8rem !important;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--color-cream-light) !important;
+    opacity: 0.65;
+    margin-bottom: 6px;
+}
+
+.timeline-item h3 {
+    color: var(--color-cream-light) !important;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+}
+
+.timeline-item p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.96rem;
+    line-height: 1.6;
+}
+
+/* ==========================================================================
+   9. WORK GRID FRAMEWORK & HTML IMAGE ADJUSTMENTS
+   ========================================================================== */
+.work-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.project-card {
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: 0;
+    transition: transform 0.3s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-6px);
+}
+
+.project-thumb {
+    height: 200px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Added: Standard alignment helper for raw portfolio img elements */
+.project-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+}
+
+.project-info {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.project-info h3 {
+    color: var(--color-cream-light) !important;
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+}
+
+.project-info p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex-grow: 1;
+}
+
+.view-project-link {
+    color: var(--color-cream-light);
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.project-card:hover .view-project-link {
+    color: var(--text-light);
+}
+
+/* ==========================================================================
+   10. CONTACT SECTION AREA
+   ========================================================================== */
+.contact-container {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    padding: 50px;
+    gap: 40px;
+    border-radius: 0;
+}
+
+.contact-info h2 {
+    font-size: 2.2rem;
+    color: var(--text-light) !important;
+    margin-bottom: 16px;
+}
+
+.contact-info p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    line-height: 1.6;
+    margin-bottom: 32px;
+}
+
+.info-links {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.info-links a, .info-links p {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--color-cream-light) !important;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: white;
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    border-color: var(--color-cream-light);
+    background: rgba(0, 0, 0, 0.35);
+}
+
+.form-submit-btn {
+    justify-content: center;
+    border: none;
+    width: 100%;
+}
+
+/* ==========================================================================
+   11. FOOTER & TIMING ANIMATIONS
+   ========================================================================== */
+.footer {
+    text-align: center;
+    padding: 40px 24px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.footer p {
+    font-size: 0.9rem;
+    color: var(--text-dark) !important;
+    opacity: 0.6;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   12. RESPONSIVE MEDIA BREAKPOINTS
+   ========================================================================== */
+@media (max-width: 768px) {
+    /* Mobile Spacing Wrapper Fixes */
+    .container {
+        padding: 130px 20px 40px 20px; 
+    }
+
+    .navbar {
+        width: calc(100% - 24px);
+        padding: 0 12px;
+    }
+    .nav-item {
+        padding: 8px 12px;
+        font-size: 0.85rem;
+    }
+    .hero-card.mirror-card {
+        padding: 12px;
+        border-radius: 0;
+    }
+
+    /* Fixed Sizing Aspect-Ratio for Mobile Banner */
+    .hero-image-banner {
+        width: 100%;
+        height: auto;           
+        aspect-ratio: 1200 / 460; 
+        border-radius: 0;
+    }
+
+    .brand-logo {
+        top: 28px;
+    }
+    .brand-logo img {
+        height: 48px;
+    }
+
+    .hero-name-overlay {
+        font-size: 2rem;
+        bottom: 18px;
+        right: 20px;
+    }
+    .hero-body {
+        padding: 24px 12px 8px 12px;
+    }
+    .hero-description {
+        max-width: 100%;
+    }
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+    .hero-cta .btn {
+        justify-content: center;
+    }
+    .timeline {
+        padding-left: 26px;
+    }
+    .about-card, .contact-container {
+        padding: 32px 20px;
+        grid-template-columns: 1fr;
+    }
+    .tabs-nav {
+        gap: 4px;
+    }
+    .tab-btn {
+        font-size: 0.95rem;
+        padding: 6px 10px;
+    }
+}
+
+/* LIGHTBOX MODAL CORE STYLES */
+.media-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    z-index: 2000;
+}
+
+/* This class triggers the display when clicked */
+.media-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+    border: 4px solid #561C24; /* Burgundy frame matching your scheme */
+}
+
+.modal-body {
+    width: 100%;
+    height: 100%;
+}
+
+.modal-close {
+    position: absolute;
+    top: -40px;
+    right: -10px;
+    background: #E8D8C4;
+    color: #561C24;
+    border: none;
+    font-size: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}

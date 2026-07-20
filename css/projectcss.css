@@ -1,0 +1,305 @@
+/* Import base styles so layout, fonts, and colors match main portfolio */
+@import url("imancss.css");
+
+/* ==========================================
+   PROJECT GALLERY DEDICATED STYLES
+   ========================================== */
+
+/* Top section spacing to avoid navbar overlapping */
+.project-gallery-section {
+    padding-top: 0;
+    padding-bottom: 60px;
+}
+
+/* Header layout for Title + Back Button */
+.project-header-flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+}
+
+.project-header-flex .section-title {
+    margin-bottom: 0;
+}
+
+/* Category sub-navigation: jumps to each project category section */
+.project-subnav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 56px;
+}
+
+.subnav-item {
+    padding: 11px 24px;
+    border-radius: 30px;
+    border: 1px solid rgba(43, 14, 18, 0.18);
+    background: rgba(255, 255, 255, 0.3);
+    color: var(--bg-card-solid) !important;
+    font-weight: 600;
+    font-size: 0.92rem;
+    text-decoration: none;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.subnav-item:hover {
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.subnav-item.active {
+    background: var(--bg-card-solid);
+    border-color: var(--bg-card-solid);
+    color: var(--color-cream-light) !important;
+}
+
+/* Each project category block */
+.project-category {
+    scroll-margin-top: 150px; /* keeps the heading clear of the fixed navbar + logo when jumped to */
+    margin-bottom: 64px;
+}
+
+.project-category:last-child {
+    margin-bottom: 0;
+}
+
+.category-heading {
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    color: var(--bg-card-solid);
+    margin-bottom: 24px;
+}
+
+/* Custom card hover transitions for gallery items */
+.work-grid .project-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.work-grid .project-card:hover {
+    transform: translateY(-6px);
+}
+
+/* ==========================================================================
+   EDITORIAL 3-COLUMN GRID & HOVER DISPLAY
+   ========================================================================== */
+.editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Enforces 3 columns (3, 3, 1) */
+    gap: 30px;
+}
+
+.editorial-card {
+    position: relative;
+    height: 420px;
+    background: var(--bg-card-solid);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(43, 14, 18, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.editorial-card:hover {
+    transform: translateY(-6px);
+}
+
+/* Background image filling card */
+.card-image-box {
+    width: 100%;
+    height: 100%;
+}
+
+.card-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+}
+
+/* Allows clicks to pass through the PDF object to trigger the modal */
+.card-image-box object {
+    pointer-events: none;
+    width: 100%;
+    height: 100%;
+}
+
+
+/* The Burgundy Info Header Overlay */
+.card-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 45%;
+    background: var(--bg-card-solid);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), opacity 0.4s ease;
+}
+
+/* HOVER EFFECT: Slides down and hides burgundy box to reveal full image */
+.editorial-card:hover .card-info-overlay {
+    transform: translateY(100%);
+    opacity: 0;
+}
+
+.card-info-overlay h3 {
+    color: var(--color-cream-light) !important;
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+}
+
+.card-info-overlay p {
+    color: rgba(255, 255, 255, 0.8) !important;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+
+/* ==========================================================================
+   LIGHTBOX POP-UP MODAL (PDF & JPG VIEWER)
+   ========================================================================== */
+.media-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    background: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding: 20px;
+}
+
+.media-modal.open {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    height: 85vh;
+    background: var(--bg-card-solid);
+    padding: 20px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-close {
+    position: absolute;
+    top: -15px;
+    right: -15px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--color-cream-light);
+    color: var(--text-dark);
+    font-size: 1.8rem;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-body {
+    width: 100%;
+    height: 100%;
+}
+
+.modal-body img, .modal-body iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    border: none;
+}
+
+/* Responsive adjustments for mobile screens */
+@media (max-width: 992px) {
+    .editorial-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .editorial-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Responsive adjustments for mobile screens */
+@media (max-width: 768px) {
+    .project-header-flex {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .project-gallery-section {
+        padding-top: 0;
+    }
+}
+
+/* Force the video gallery grid to strictly cap columns at 3 wide maximum */
+#category-3d .work-grid {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Fallback for smaller tablet or mobile screens so it doesn't break */
+@media (max-width: 992px) {
+    #category-3d .work-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    #category-3d .work-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ==========================================================================
+   GLASSMORPHISM SOFTWARE PILL BADGES
+   ========================================================================== */
+.software-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 8px;
+}
+
+.badge {
+    display: inline-block;
+    padding: 6px 14px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    border-radius: 20px; /* Rounded pill look matching your sub-nav buttons */
+    
+    /* Glassmorphism Effect */
+    background: rgba(255, 255, 255, 0.12); 
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    
+    /* Elegant matching text color and clean transparent border */
+    color: var(--color-cream-light) !important; 
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* Subtle hover effect if a user mouses over the card details */
+.project-card:hover .badge {
+    background: rgba(255, 255, 255, 0.22);
+    border-color: rgba(255, 255, 255, 0.45);
+}
